@@ -1,0 +1,45 @@
+{
+  "name": "@sandsoftwaresolutions/human-format",
+  "version": "0.1.0",
+  "description": "Human readable bytes, numbers, relative time, plurals, lists and truncation in Dutch, English and any language Intl knows.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
+    }
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test",
+    "pack:check": "npm pack --dry-run"
+  },
+  "keywords": [
+    "format",
+    "intl",
+    "bytes",
+    "relative-time",
+    "plural",
+    "i18n"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SandSoftwareSolutions/ss-human-format.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SandSoftwareSolutions/ss-human-format/issues"
+  },
+  "homepage": "https://github.com/SandSoftwareSolutions/ss-human-format#readme",
+  "publishConfig": {
+    "access": "public"
+  }
+}
