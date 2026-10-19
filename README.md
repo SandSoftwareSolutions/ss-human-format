@@ -45,4 +45,5 @@ initials("Kaj van Schalkwijk");           // "KS"
 - **`plural`** follows each language's real rules, not just "one or many": Polish has `one`, `few`, `many` and `other`. Give the forms you need and `other` as the fallback; `zero` is a special word for exactly 0.
 - **`truncate`** counts what people see, so it never cuts an emoji family or a letter with an accent in half; `atWord: true` cuts at a space.
 - **`initials`** takes the first and last name and skips lower-case particles (`van`, `de`) unless `all: true`.
+- Numbers that round to zero show `0`, never `-0`. `bytes`, `number`, `percent` and `compact` throw on NaN and Infinity. `parseBytes` refuses `Mb`/`Gb` (megabit, not megabyte) and sizes beyond 2^53 bytes. `truncate` and `initials` throw on non-strings. `ordinal` knows English and Dutch; every other language gets `3.`.
 - Dutch (`nl`) and English (`en`) are tested; the `Intl`-based functions work with any language your Node has data for (full ICU is included in standard Node builds).

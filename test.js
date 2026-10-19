@@ -116,3 +116,64 @@ test("initials", () => {
   assert.equal(initials("élodie dupont"), "ÉD");
   assert.equal(initials(""), "");
 });
+
+test("bytes never shows 1,000 B or -0 B", () => {
+  assert.equal(bytes(-0.4), "0 B");
+  assert.equal(bytes(999.7), "1 kB");
+  assert.equal(bytes(999.4), "999 B");
+  assert.equal(bytes(1023.7, { binary: true }), "1 KiB");
+  assert.equal(bytes(999_950), "1 MB");
+  assert.equal(bytes(999_949), "999.9 kB");
+  assert.equal(bytes(-1500), "-1.5 kB");
+  assert.equal(bytes(-0), "0 B");
+});
+
+test("numbers that round to zero have no minus sign; NaN and Infinity are errors in every formatter", () => {
+  assert.equal(number(-0), "0");
+  assert.equal(number(-0.001), "0");
+  assert.equal(number(-0.005), "-0.01");
+  assert.equal(percent(-0.001), "0%");
+  assert.equal(percent(-0.005), "-1%");
+  assert.equal(compact(-0.01), "0");
+  for (const bad of [NaN, Infinity, -Infinity]) {
+    assert.throws(() => compact(bad), TypeError);
+    assert.throws(() => percent(bad), TypeError);
+    assert.throws(() => number(bad), TypeError);
+    assert.throws(() => bytes(bad), TypeError);
+  }
+});
+
+test("parseBytes: Mb/Gb mean bits and are refused, huge sizes are an error, inherited names are not units", () => {
+  for (const bad of ["5 Mb", "1 Gb", "2Tb", "1 Kb"]) assert.throws(() => parseBytes(bad), /bits/, bad);
+  assert.equal(parseBytes("5 MB"), 5_000_000);
+  assert.equal(parseBytes("5 mb"), 5_000_000);
+  assert.equal(parseBytes("5 kb"), 5000);
+  assert.throws(() => parseBytes("9000 PiB"), RangeError);
+  assert.throws(() => parseBytes("1 constructor"), TypeError);
+  assert.equal(Object.is(parseBytes("-0 B"), 0), true);
+});
+
+test("truncate: an ellipsis longer than max, a non-string and a huge text", () => {
+  assert.equal(truncate("abcdef", 2, { ellipsis: "..." }), "..");
+  assert.throws(() => truncate(12345, 3), TypeError);
+  const start = Date.now();
+  assert.equal(truncate("é".repeat(2_000_000), 5), "éééé…");
+  assert.ok(Date.now() - start < 1000);
+  assert.equal(truncate("👨‍👩‍👧‍👦".repeat(3), 2), "👨‍👩‍👧‍👦…");
+});
+
+test("initials needs a string (null used to give 'N')", () => {
+  assert.throws(() => initials(null), TypeError);
+  assert.throws(() => initials(undefined), TypeError);
+  assert.equal(initials("Kaj van Schalkwijk"), "KS");
+});
+
+test("ordinal follows the English rules for 1 to 1200 and negative numbers", () => {
+  for (let n = -30; n < 1200; n++) {
+    const last2 = Math.abs(n) % 100;
+    const last = Math.abs(n) % 10;
+    const suffix = last2 >= 11 && last2 <= 13 ? "th" : last === 1 ? "st" : last === 2 ? "nd" : last === 3 ? "rd" : "th";
+    assert.equal(ordinal(n), `${n}${suffix}`);
+  }
+  assert.equal(ordinal(3, "nl"), "3e");
+});
