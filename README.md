@@ -10,6 +10,8 @@ Numbers and dates the way a person says them: `1.5 MB`, `3 minutes ago` / `3 min
 npm install @sandsoftwaresolutions/human-format
 ```
 
+Works with `import` and `require()`, and ships TypeScript types for both.
+
 ## Usage
 
 ```js
